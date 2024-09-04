@@ -36,12 +36,11 @@ def buscar_palabras(bienvenido,leer_archivo):
 def juego(buscar_en_archivo):
     while True:
         palabra = choice(buscar_en_archivo.read().splitlines()).upper()
+        x = list(palabra)
+        shuffle(x)
         palabra_elegida = palabra
-        lista_palabra = palabra
-        shuffle(list(lista_palabra))
-        palabra_desordenada = lista_palabra
         buscar_en_archivo.close()
-        return palabra_elegida, palabra_desordenada
+        return palabra_elegida, x
 def final():
     final = print("Que tenga un buen día", "las veces jugadas fueron:",veces_jugadas , "\nLas veces acertadas fueron:",veces_acertadas,"\n Los reintentos fueron: ", reintentos, "\n sus puntos fueron", puntos)
     return
@@ -69,18 +68,19 @@ if bienvenido:
         if resolver == palabra_elegida:
             puntos = vidas * len(palabra_elegida)
             veces_acertadas +=1
-            print("Muy bien",palabra_elegida)
+            print("\nMuy bien",palabra_elegida)
             final()
             break
-        elif resolver != palabra_elegida:
-            print("error vuelva a intentar ordenar:", palabra_desordenada )
-            vidas - 1
-            reintentos +=1
-            continue
-        elif vidas == 0:
+        elif vidas == 0 :
+            print("\nperdiste (T_T)", palabra_elegida)
             puntos = vidas * len(palabra_elegida)
             final()
             break
+        elif resolver != palabra_elegida:
+            print("\nerror vuelva a intentar ordenar:", palabra_desordenada, "te quedan", vidas )
+            vidas -= 1
+            reintentos +=1
+            continue
 else:
     puntos = 0
     final()
