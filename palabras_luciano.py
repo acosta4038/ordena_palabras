@@ -1,9 +1,11 @@
 from random import choice, shuffle
-def crear_archivo_de_jugadores(ruta_de_archivo):
-    """La función crea y cierra un archivo de texto"""    
+def crear_archivo_de_jugadores(ruta_de_jugadores, ruta_de_puntaje):
+    """La función crea y cierra dos archivos de texto donde se guardan los nombres de los jugadores y sus puntos """    
     try:
-        crear_archivo_jugadores = open(ruta_de_archivo,"x")
+        crear_archivo_jugadores = open(ruta_de_jugadores,"x")
+        crear_archivo_de_puntaje = open(ruta_de_puntaje,"x")
         crear_archivo_jugadores.close()
+        crear_archivo_de_puntaje.close()
     except:
         print("El archivo ya fue creado")
     return
@@ -34,6 +36,7 @@ def buscar_palabras(bienvenido,leer_archivo):
     return letras_totales, largo_minimo, largo_maximo, largo_promedio 
 
 def juego(buscar_en_archivo):
+    """crea palabras aleatorias"""
     while True:
         palabra = choice(buscar_en_archivo.read().splitlines()).upper()
         x = list(palabra)
@@ -42,15 +45,37 @@ def juego(buscar_en_archivo):
         buscar_en_archivo.close()
         return palabra_elegida, x
 def final():
+    """muestra un puntaje final"""
     final = print("Que tenga un buen día", "las veces jugadas fueron:",veces_jugadas , "\nLas veces acertadas fueron:",veces_acertadas,"\n Los reintentos fueron: ", reintentos, "\n sus puntos fueron", puntos)
     return
 
-def guardar_jugadores(ruta_de_jugadores, ingresar_jugadores, puntos):
+def guardar_jugadores(ruta_de_jugadores, ruta_de_puntaje, ingresar_jugadores, puntos):
+    """guarda el nombre de los jugadores y sus puntos"""
     jugadores = open(ruta_de_jugadores,"a")
-    jugadores.write(ingresar_jugadores)
-    jugadores.write("\t"*10)
-    jugadores.write(str(puntos) + "\n")
+    jugadores.write(ingresar_jugadores + "\n")
+    puntajes = open(ruta_de_puntaje, "a")
+    puntajes.write(str(puntos) + "\t" +"\n")
     jugadores.close()
+    puntajes.close()
+    return
+
+def ranking(ruta_de_jugadores, ruta_de_puntaje):
+    """crea un ranking de los 3 mejores jugadores (está en desarrollo)"""
+    jugadores = open(ruta_de_jugadores,"r")
+    jugadores.close()
+    puntajes = open(ruta_de_puntaje,"r").readline()
+    primera_posición = 1
+    segunda_posición = 1
+    tercera_posición = 1
+    len(puntajes)
+    for rankin in puntajes:
+        primera_posición > int(rankin[3:])
+        segunda_posición > int(rankin[:3]) < primera_posición
+        tercera_posición > int(rankin[:3]) < segunda_posición
+    print("Mejores jugadores")
+    print("N°1",primera_posición)
+    print("N°2", segunda_posición)
+    print("N°3", tercera_posición)
     return
 
 #cuerpo
@@ -59,18 +84,22 @@ veces_jugadas = 0
 reintentos = 0
 ruta_de_archivo = "/home/luci/Documentos/python/logica/palabras/spanish.lst"
 ruta_de_jugadores = "/home/luci/Documentos/python/logica/palabras/jugadores.txt"
-crear_archivo_de_jugadores(ruta_de_jugadores)
+ruta_de_puntaje = "/home/luci/Documentos/python/logica/palabras/puntajes.txt"
+crear_archivo_de_jugadores(ruta_de_jugadores, ruta_de_puntaje)
 leer_archivo = open(ruta_de_archivo,"r")
-bienvenido = input("Bienvendio muchas gracias por probar este juego ¿Quieres continuar? ").strip()
+bienvenido = input("Bienvendio muchas gracias por probar este juego ¿Quieres continuar? apreta <ENTER> para salir ").strip()
+ranking(ruta_de_jugadores,ruta_de_puntaje)
 while True:
     ingresar_jugador = input("Por favor ingrese un nombre de jugador: ").strip().upper()
     if ingresar_jugador.isdigit:
         ingresar_jugador == False
         break
+    elif ingresar_jugador == "":
+        print("Solo se permiten nombres")
+        continue
     else:
         print("Solo se permiten nombres")
         continue
-
 if bienvenido:
     letras_totales,largo_minimo,largo_maximo,largo_promedio = buscar_palabras(bienvenido,leer_archivo)
     print(letras_totales)
@@ -88,13 +117,13 @@ if bienvenido:
             puntos = vidas * len(palabra_elegida)
             veces_acertadas +=1
             print("\nMuy bien",palabra_elegida)
-            guardar_jugadores(ruta_de_jugadores, ingresar_jugador, puntos)
+            guardar_jugadores(ruta_de_jugadores, ruta_de_puntaje, ingresar_jugador, puntos)
             final()
             break
         elif vidas == 0 :
             print("\nperdiste (T_T) la palabra era:", palabra_elegida)
             puntos = vidas * len(palabra_elegida)
-            guardar_jugadores(ruta_de_jugadores, ingresar_jugador, puntos)
+            guardar_jugadores(ruta_de_jugadores, ruta_de_puntaje, ingresar_jugador, puntos)
             final()
             break
         elif resolver != palabra_elegida:

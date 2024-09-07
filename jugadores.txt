@@ -1,1 +1,4 @@
-LUCIANO										45
+LUCIANO
+raf
+graf
+total
