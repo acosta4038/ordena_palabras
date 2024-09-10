@@ -1,4 +1,5 @@
 from random import choice, shuffle
+import pandas as pd
 def crear_archivo_de_jugadores(ruta_de_jugadores, ruta_de_puntaje):
     """La función crea y cierra dos archivos de texto donde se guardan los nombres de los jugadores y sus puntos """    
     try:
@@ -52,30 +53,24 @@ def final():
 def guardar_jugadores(ruta_de_jugadores, ruta_de_puntaje, ingresar_jugadores, puntos):
     """guarda el nombre de los jugadores y sus puntos"""
     jugadores = open(ruta_de_jugadores,"a")
+    ingresar_jugadores = ingresar_jugadores
     jugadores.write(ingresar_jugadores + "\n")
     puntajes = open(ruta_de_puntaje, "a")
-    puntajes.write(str(puntos) + "\t" +"\n")
+    puntajes.write(str(puntos) + "\n")
     jugadores.close()
     puntajes.close()
     return
 
 def ranking(ruta_de_jugadores, ruta_de_puntaje):
-    """crea un ranking de los 3 mejores jugadores (está en desarrollo)"""
-    jugadores = open(ruta_de_jugadores,"r")
-    jugadores.close()
-    puntajes = open(ruta_de_puntaje,"r").readline()
-    primera_posición = 1
-    segunda_posición = 1
-    tercera_posición = 1
-    len(puntajes)
-    for rankin in puntajes:
-        primera_posición > int(rankin[3:])
-        segunda_posición > int(rankin[:3]) < primera_posición
-        tercera_posición > int(rankin[:3]) < segunda_posición
-    print("Mejores jugadores")
-    print("N°1",primera_posición)
-    print("N°2", segunda_posición)
-    print("N°3", tercera_posición)
+    """crea un ranking de los 10 mejores jugadores (está en desarrollo)"""
+    jugadores = open(ruta_de_jugadores,"r").read().splitlines()
+    puntajes = open(ruta_de_puntaje,"r").read().splitlines()
+    print(puntajes)
+    datos = {"participantes":jugadores,
+             "puntos":puntajes}
+    df = pd.DataFrame(datos)
+    df = df.sort_values(by= "puntos", ascending=False).reset_index(drop=True)
+    print(df)
     return
 
 #cuerpo
@@ -91,14 +86,14 @@ bienvenido = input("Bienvendio muchas gracias por probar este juego ¿Quieres co
 ranking(ruta_de_jugadores,ruta_de_puntaje)
 while True:
     ingresar_jugador = input("Por favor ingrese un nombre de jugador: ").strip().upper()
-    if ingresar_jugador.isdigit:
+    if len(ingresar_jugador) == 0:
+        print("Por favor ingrese un nombres")
+        continue
+    elif ingresar_jugador.isdigit:
         ingresar_jugador == False
         break
-    elif ingresar_jugador == "":
-        print("Solo se permiten nombres")
-        continue
-    else:
-        print("Solo se permiten nombres")
+    elif ingresar_jugador.isdigit:
+        ingresar_jugador == True
         continue
 if bienvenido:
     letras_totales,largo_minimo,largo_maximo,largo_promedio = buscar_palabras(bienvenido,leer_archivo)
