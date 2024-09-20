@@ -14,7 +14,6 @@ def temas(ruta_temas):
     """muestra una lista de temas"""
     lista_de_temas = listdir(ruta_temas)
     lista = list([])
-    chdir(ruta_temas)
     medio = "\n"
     for i, temas in enumerate(lista_de_temas):
         temas_a_elegir = (f"{i}:{temas}")
@@ -34,16 +33,14 @@ def elegir_tema(temas_a_elegir,ruta_de_jugador):
             print("El tema elegido fue: ",tema_elegido)
             with open(ruta_de_jugador,"a")as dato_jugador:
                 dato_jugador.write(str(tema_elegido[2:-4]) + ",")
-            ruta_tema_elegido = getcwd()+ "/" + str(tema_elegido[2:])
-            print(ruta_tema_elegido)
+            ruta_tema_elegido = "ordena_palabras/temas" "/" + str(tema_elegido[2:])
             return ruta_tema_elegido
         elif int(elegir_tema) >= 10:
             tema_elegido = temas_a_elegir[int(elegir_tema)]
             print("El tema elegido fue: ",tema_elegido)
             with open(ruta_de_jugador,"a")as dato_jugador:
                 dato_jugador.write(str(tema_elegido[3:-4]) + ",")
-            ruta_tema_elegido = getcwd()+ "/" + str(tema_elegido[3:])
-            print(ruta_tema_elegido)
+            ruta_tema_elegido = "ordena_palabras/temas" "/" + str(tema_elegido[3:])
             return ruta_tema_elegido
         else:
             print("error elija uno de estos numeros")
@@ -62,10 +59,8 @@ def promedio(ruta_tema_elegido):
     print(minimo,maximo,medio)
     return int(medio), maximo, minimo
 
-def mesclar_palabra(ruta_tema_elegido, ruta_de_jugador,promedio,minimo):
+def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
     while True:
-        lista_palabras =open(ruta_tema_elegido,"r").read().splitlines()
-
         dificultad = input("Escribe una dificultas <F> o <D>: ").strip().upper()
         if not dificultad:
             print("\n Por favor elija una")
@@ -147,7 +142,7 @@ def ranking(ruta_de_jugadores):
 
 #Cuerpo principal#
 #palabras/temas/marcas de autos.lst
-ruta_de_jugador = "/home/luci/Documentos/python/logica/archivo_jugador.csv"
+ruta_de_jugador = "ordena_palabras/archivo_jugador.csv"
 ruta_temas = "ordena_palabras/temas"
 crear_archivo(ruta_de_jugador)
 while True:
@@ -168,9 +163,10 @@ while True:
     medio, maximo, minimo = promedio(ruta_tema_elegido)
     contador = 0
     puntajes = 0
+    lista_palabras =open(ruta_tema_elegido,"r").read().splitlines()
     while True:
         if contador != 3:
-            palabra_elegida, x = mesclar_palabra(ruta_tema_elegido, ruta_de_jugador,medio,minimo)
+            palabra_elegida, x = mesclar_palabra(lista_palabras, ruta_de_jugador,medio,minimo)
             puntos = juego_1(palabra_elegida, x)
             puntajes = puntajes + puntos
             contador +=1
