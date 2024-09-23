@@ -70,11 +70,15 @@ def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
                     if len(palabra) >= minimo <= int(promedio):
                         x = list(palabra)
                         shuffle(x)
-                        palabra_elegida = palabra
-                        with open(ruta_de_jugador,"a")as dato_jugador:
-                            dato_jugador.write(palabra_elegida + ",")
-                        lista_palabras.remove(palabra_elegida)
-                        return (palabra_elegida).upper(), x
+                        while True:
+                            if x != palabra:
+                                palabra_elegida = palabra
+                                with open(ruta_de_jugador,"a")as dato_jugador:
+                                    dato_jugador.write(palabra_elegida + ",")
+                                lista_palabras.remove(palabra_elegida)
+                                return (palabra_elegida).upper(), x
+                            else:
+                                continue
                     else:
                         continue
         elif dificultad == "DIFICIL" or dificultad == "D":
@@ -83,11 +87,15 @@ def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
                     if len(palabra) >= int(promedio):
                         x = list(palabra)
                         shuffle(x)
-                        palabra_elegida = palabra
-                        with open(ruta_de_jugador,"a")as dato_jugador:
-                            dato_jugador.write(palabra_elegida + ",")
-                        lista_palabras.remove(palabra_elegida)
-                        return (palabra_elegida).upper(), x
+                        while True:
+                            if x != palabra:
+                                palabra_elegida = palabra
+                                with open(ruta_de_jugador,"a")as dato_jugador:
+                                    dato_jugador.write(palabra_elegida + ",")
+                                lista_palabras.remove(palabra_elegida)
+                                return (palabra_elegida).upper(), x
+                            else:
+                                continue
                     else:
                         continue
         else:
@@ -104,7 +112,7 @@ def juego_1(palabra_elegida, palabra_desordenada):
             return puntos
         elif resolver != palabra_elegida:
             intentos -= 1
-            print("\n Error vuelva a intentar ordenar:", palabra_desordenada, "te quedan", intentos)
+            print("\n Error vuelva a intentar ordenar:", *palabra_desordenada, "te quedan", intentos)
             continue
         else:
             print("\nfin del juego")
