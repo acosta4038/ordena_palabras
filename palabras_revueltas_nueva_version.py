@@ -70,15 +70,14 @@ def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
                     if len(palabra) >= minimo <= int(promedio):
                         x = list(palabra)
                         shuffle(x)
-                        while True:
-                            if x != palabra:
-                                palabra_elegida = palabra
-                                with open(ruta_de_jugador,"a")as dato_jugador:
-                                    dato_jugador.write(palabra_elegida + ",")
-                                lista_palabras.remove(palabra_elegida)
-                                return (palabra_elegida).upper(), x
-                            else:
-                                continue
+                        if x != palabra:
+                            palabra_elegida = palabra
+                            with open(ruta_de_jugador,"a")as dato_jugador:
+                                dato_jugador.write(palabra_elegida + ",")
+                            lista_palabras.remove(palabra_elegida)
+                            return (palabra_elegida).upper(), x
+                        else:
+                            continue
                     else:
                         continue
         elif dificultad == "DIFICIL" or dificultad == "D":
@@ -87,15 +86,14 @@ def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
                     if len(palabra) >= int(promedio):
                         x = list(palabra)
                         shuffle(x)
-                        while True:
-                            if x != palabra:
-                                palabra_elegida = palabra
-                                with open(ruta_de_jugador,"a")as dato_jugador:
-                                    dato_jugador.write(palabra_elegida + ",")
-                                lista_palabras.remove(palabra_elegida)
-                                return (palabra_elegida).upper(), x
-                            else:
-                                continue
+                        if x != palabra:
+                            palabra_elegida = palabra
+                            with open(ruta_de_jugador,"a")as dato_jugador:
+                                dato_jugador.write(palabra_elegida + ",")
+                            lista_palabras.remove(palabra_elegida)
+                            return (palabra_elegida).upper(), x
+                        else:
+                            continue
                     else:
                         continue
         else:
@@ -139,7 +137,6 @@ def ranking(ruta_de_jugadores):
     df = pd.DataFrame(datos)
     df = df.sort_values(by= " puntos ", ascending=False).reset_index(drop=True)
     df.drop(df.index[11:100], inplace=True)
-    df[" Promedio_de_puntos "] = df[" puntos "].rank(method="min")
     print("\n  Mejores jugadores \n",df,"\n")
 
 #Cuerpo principal#
@@ -153,7 +150,7 @@ while True:
         if len(nombre_jugador) == 0:
             print("\nSe a salido con exito")
             exit()
-        elif nombre_jugador.isdigit():
+        elif nombre_jugador:
             with open(ruta_de_jugador,"a")as dato_jugador:
                 dato_jugador.write(nombre_jugador + ",")
             lista = temas(ruta_temas)
