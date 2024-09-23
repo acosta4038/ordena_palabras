@@ -143,7 +143,6 @@ def ranking(ruta_de_jugadores):
     print("\n  Mejores jugadores \n",df,"\n")
 
 #Cuerpo principal#
-#palabras/temas/marcas de autos.lst
 ruta_de_jugador = "ordena_palabras/archivo_jugador.csv"
 ruta_temas = "ordena_palabras/temas"
 crear_archivo(ruta_de_jugador)
