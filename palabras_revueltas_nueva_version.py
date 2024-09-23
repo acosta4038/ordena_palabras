@@ -146,7 +146,7 @@ while True:
         if len(nombre_jugador) == 0:
             print("\nSe a salido con exito")
             exit()
-        elif nombre_jugador:
+        elif nombre_jugador.isdigit():
             with open(ruta_de_jugador,"a")as dato_jugador:
                 dato_jugador.write(nombre_jugador + ",")
             lista = temas(ruta_temas)
@@ -190,4 +190,5 @@ while True:
     if volver_a_jugar == "S":
         continue
     elif volver_a_jugar == "N":
+        print("\n"*50)
         exit()
