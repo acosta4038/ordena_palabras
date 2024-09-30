@@ -16,18 +16,20 @@ def temas(ruta_temas):
     lista = list([])
     separador = "\n"
     for i, temas in enumerate(lista_de_temas):
-        temas_a_elegir = (f"{i+1}:{temas[:-4]}")
+        temas_a_elegir = (f"{i}:{temas[:-4]}")
         lista.append(temas_a_elegir + separador)
     print(separador,*lista)
     return lista
 
 
 def elegir_tema(temas_a_elegir,ruta_de_jugador):
+    """Permite elegir el numero del tema y guardando en un archivo el tema elegido"""
     while True:
         elegir_tema = input("Ingrese el numero del tema: ").strip()
         if not elegir_tema:
             print("Por favor elija un tema")
             continue
+        
         elif int(elegir_tema) <= 9:
             tema_elegido = temas_a_elegir[int(elegir_tema)]
             print("\nEl tema elegido fue: ",tema_elegido)
@@ -35,7 +37,7 @@ def elegir_tema(temas_a_elegir,ruta_de_jugador):
                 dato_jugador.write(str(tema_elegido[2:-1]) + ",")
             ruta_tema_elegido = "ordena_palabras/temas" "/" + str(tema_elegido[2:-1] + ".lst")
             return ruta_tema_elegido
-        elif int(elegir_tema) >= 10:
+        elif int(elegir_tema)-1 >= 10:
             tema_elegido = temas_a_elegir[int(elegir_tema)]
             print("El tema elegido fue: ",tema_elegido)
             with open(ruta_de_jugador,"a")as dato_jugador:
@@ -46,6 +48,7 @@ def elegir_tema(temas_a_elegir,ruta_de_jugador):
             print("error elija uno de estos numeros")
 
 def promedio(ruta_tema_elegido):
+    """Saca un promedio de letras del tema elegido"""
     tema_elegido = open(ruta_tema_elegido,"r").read().splitlines()
     minimo = 1
     maximo = 1
@@ -59,15 +62,17 @@ def promedio(ruta_tema_elegido):
     return int(medio), maximo, minimo
 
 def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
+    """Busca al azar palabras dentro del tema y mescla sus letras"""
     while True:
         dificultad = input("Escribe una dificultas <F> o <D>: ").strip().upper()
         if not dificultad:
             print("\n Por favor elija una")
             continue
-        elif dificultad == "FACIL" or dificultad == "F":
-                while True:
-                    palabra = choice(lista_palabras)
-                    if len(palabra) >= minimo <= int(promedio):
+        elif dificultad == "FACIL" or dificultad == "F":               
+            while True:
+                palabra = choice(lista_palabras)
+                if len(palabra) >= minimo <= int(promedio):
+                    while True:
                         x = list(palabra)
                         shuffle(x)
                         if x != palabra:
@@ -78,28 +83,30 @@ def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
                             return (palabra_elegida).upper(), x
                         else:
                             continue
-                    else:
-                        continue
+                else:
+                    continue
         elif dificultad == "DIFICIL" or dificultad == "D":
                 while True:
                     palabra = choice(lista_palabras)
-                    if len(palabra) >= int(promedio):
-                        x = list(palabra)
-                        shuffle(x)
-                        if x != palabra:
-                            palabra_elegida = palabra
-                            with open(ruta_de_jugador,"a")as dato_jugador:
-                                dato_jugador.write(palabra_elegida + ",")
-                            lista_palabras.remove(palabra_elegida)
-                            return (palabra_elegida).upper(), x
-                        else:
-                            continue
+                    if len(palabra) >= int(promedio):        
+                        x = list(palabra)    
+                        while True:
+                            shuffle(x)
+                            if x != palabra:
+                                palabra_elegida = palabra
+                                with open(ruta_de_jugador,"a")as dato_jugador:
+                                    dato_jugador.write(palabra_elegida + ",")
+                                lista_palabras.remove(palabra_elegida)
+                                return (palabra_elegida).upper(), x
+                            else:
+                                continue
                     else:
                         continue
         else:
             continue    
 
 def juego_1(palabra_elegida, palabra_desordenada):
+    """Tienes que intentar ordenar 3 palabras con 4 intentos para cada una"""
     intentos = 4
     print("\nLa palabra a resolver es: \n",*palabra_desordenada)
     while intentos != 0:
@@ -120,24 +127,32 @@ def juego_1(palabra_elegida, palabra_desordenada):
     return puntos
     
 def ranking(ruta_de_jugadores):
+    """Crea un ranking de los mejores 10 jugadores"""
     lista_jugadores = open(ruta_de_jugadores,"r").readlines()
+    barra = "|"
+    linea = "-" * 40
     nombre = list()
-    tema = list()
     puntos = list()
-    for jugadores in lista_jugadores:
-        separador = jugadores.split(",")
-        nombre.append(separador[0])
-        tema.append(separador[1])
-        puntos.append(separador[5][:-1])
+    restantes = 10
+    try:
+        for jugadores in lista_jugadores:
+            separador = jugadores.split(",")
+            nombre.append(" "+separador[0]+" ")
+            puntos.append(" "+separador[5][:-1]+" ")
+            restantes -= 1
+            for i in range(restantes):
+                nombre.append(" "+"-----"+" ")
+                puntos.append(" "+"0"+" ")
+    except:
+        pass
 
-    datos = {" participantes ": nombre,
-             " tema ": tema,
-             " puntos ": puntos}
+    datos = {".":barra," participantes ": nombre,"":barra,
+             "  puntos ": puntos,"-":barra}
     
     df = pd.DataFrame(datos)
-    df = df.sort_values(by= " puntos ", ascending=False).reset_index(drop=True)
+    df = df.sort_values(by= "  puntos ", ascending=False).reset_index(drop=True)
     df.drop(df.index[11:100], inplace=True)
-    print("\n  Mejores jugadores \n",df,"\n")
+    print("\nTop 10 mejores jugadores\n",linea,"\n",df,"\n",linea)
 
 #Cuerpo principal#
 ruta_de_jugador = "ordena_palabras/archivo_jugador.csv"
@@ -149,6 +164,10 @@ while True:
         nombre_jugador = input("Bienvenido por favor ingrese su nombre o aprete <ENTER> para salir: ").strip()
         if len(nombre_jugador) == 0:
             print("\nSe a salido con exito")
+            exit()
+        elif nombre_jugador == ".":
+            ranking(ruta_de_jugador)
+            input("preciona <enter>")
             exit()
         elif nombre_jugador:
             with open(ruta_de_jugador,"a")as dato_jugador:
