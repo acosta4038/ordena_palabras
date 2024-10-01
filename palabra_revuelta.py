@@ -70,7 +70,7 @@ def lectura(lista_de_palabras):
             eleccion_dificultad = int(input("Seleccione la dificultad, 1: benigno 2: maligno: "))
             if eleccion_dificultad == 1:
                 for palabra in lista_de_palabras:
-                    palabra = palabra.strip().replace("","-")
+                    palabra = palabra.strip().lower()
                     if len(palabra) > 4 and len(palabra) < 12:
                         filtro_lista.append(palabra)
                 break
