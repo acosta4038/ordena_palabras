@@ -14,38 +14,47 @@ def temas(ruta_temas):
     """muestra una lista de temas"""
     lista_de_temas = listdir(ruta_temas)
     lista = list([])
+    muestra = []
     separador = "\n"
+    barra = "|"
+    linea = "-"*30
     for i, temas in enumerate(lista_de_temas):
         temas_a_elegir = (f"{i}:{temas[:-4]}")
+        muestra.append(linea+separador+barra+temas_a_elegir+barra+separador)
         lista.append(temas_a_elegir + separador)
-    print(separador,*lista)
+    print(separador,*muestra,linea,separador)
     return lista
 
 
 def elegir_tema(temas_a_elegir,ruta_de_jugador):
     """Permite elegir el numero del tema y guardando en un archivo el tema elegido"""
     while True:
-        elegir_tema = input("Ingrese el numero del tema: ").strip()
-        if not elegir_tema:
-            print("Por favor elija un tema")
+        try:
+            elegir_tema = input("Ingrese el numero del tema: ").strip()
+            if not elegir_tema:
+                print("Por favor elija un tema")
+                continue
+            
+            elif int(elegir_tema) <= 9:
+                tema_elegido = temas_a_elegir[int(elegir_tema)]
+                print("\nEl tema elegido fue: ",tema_elegido)
+                with open(ruta_de_jugador,"a")as dato_jugador:
+                    dato_jugador.write(str(tema_elegido[2:-1]) + ",")
+                ruta_tema_elegido = "ordena_palabras/temas" "/" + str(tema_elegido[2:-1] + ".lst")
+                return ruta_tema_elegido
+            elif int(elegir_tema)-1 >= 10:
+                tema_elegido = temas_a_elegir[int(elegir_tema)]
+                print("El tema elegido fue: ",tema_elegido)
+                with open(ruta_de_jugador,"a")as dato_jugador:
+                    dato_jugador.write(str(tema_elegido[3:-1]) + ",")
+                ruta_tema_elegido = "ordena_palabras/temas" "/" + str(tema_elegido[3:-1] + ".lst")
+                return ruta_tema_elegido
+            else:
+                print("error elija uno de estos numeros")
+                continue
+        except:
+            print("error")
             continue
-        
-        elif int(elegir_tema) <= 9:
-            tema_elegido = temas_a_elegir[int(elegir_tema)]
-            print("\nEl tema elegido fue: ",tema_elegido)
-            with open(ruta_de_jugador,"a")as dato_jugador:
-                dato_jugador.write(str(tema_elegido[2:-1]) + ",")
-            ruta_tema_elegido = "ordena_palabras/temas" "/" + str(tema_elegido[2:-1] + ".lst")
-            return ruta_tema_elegido
-        elif int(elegir_tema)-1 >= 10:
-            tema_elegido = temas_a_elegir[int(elegir_tema)]
-            print("El tema elegido fue: ",tema_elegido)
-            with open(ruta_de_jugador,"a")as dato_jugador:
-                dato_jugador.write(str(tema_elegido[3:-1]) + ",")
-            ruta_tema_elegido = "ordena_palabras/temas" "/" + str(tema_elegido[3:-1] + ".lst")
-            return ruta_tema_elegido
-        else:
-            print("error elija uno de estos numeros")
 
 def promedio(ruta_tema_elegido):
     """Saca un promedio de letras del tema elegido"""
@@ -107,6 +116,7 @@ def mesclar_palabra(lista_palabras, ruta_de_jugador,promedio,minimo):
 
 def juego_1(palabra_elegida, palabra_desordenada):
     """Tienes que intentar ordenar 3 palabras con 4 intentos para cada una"""
+    palabra_desordenada = palabra_desordenada.upper()
     intentos = 4
     print("\nLa palabra a resolver es: \n",*palabra_desordenada)
     while intentos != 0:
@@ -133,24 +143,24 @@ def ranking(ruta_de_jugadores):
     linea = "-" * 40
     nombre = list()
     puntos = list()
-    restantes = 10
+    restantes = 11
     try:
         for jugadores in lista_jugadores:
             separador = jugadores.split(",")
-            nombre.append(" "+separador[0]+" ")
-            puntos.append(" "+separador[5][:-1]+" ")
+            nombre.append(separador[0])
+            puntos.append(separador[5][:-1])
             restantes -= 1
-            for i in range(restantes):
-                nombre.append(" "+"-----"+" ")
-                puntos.append(" "+"0"+" ")
+        for i in range(restantes):
+            nombre.append("-----")
+            puntos.append("0")
     except:
         pass
 
-    datos = {".":barra," participantes ": nombre,"":barra,
-             "  puntos ": puntos,"-":barra}
+    datos = {"|":barra," participantes ":nombre,"":barra,
+             "  puntos ":puntos,"||":barra}
     
     df = pd.DataFrame(datos)
-    df = df.sort_values(by= "  puntos ", ascending=False).reset_index(drop=True)
+    df = df.sort_values("  puntos ", ascending=False).reset_index(drop=True)
     df.drop(df.index[11:100], inplace=True)
     print("\nTop 10 mejores jugadores\n",linea,"\n",df,"\n",linea)
 
